@@ -13,8 +13,8 @@
   module.exports = function() {
     var deferred        = Q.defer()
     var config          = Object.create(webpack_config)
-    config.context      = loc.src.client + '/app'
-    config.resolve.root = loc.src.client + '/app'
+    config.context      = loc.src.client
+    config.resolve.root = loc.src.client
     config.output.path  = loc.pub_dir
     webpack(config, function(err, stats) {
       if(err) deferred.reject(new gutil.PluginError("webpack", err))

@@ -1,7 +1,8 @@
 (function() {
   'use strict';
 
-  angular
-    .module( 'app', [] );
+  require('./index.less');
+
+  module.exports = angular.module( 'app', [] );
 
 })();
