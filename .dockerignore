@@ -1,0 +1,17 @@
+.git/
+node_modules/
+bower_components/
+tasks/
+src/
+tasks/
+test/
+.dockerignore
+.gitignore
+Dockerfile
+bower.json
+circle.yml
+gulpfile.js
+package.json
+phantomjsdriver.log
+protractor.config.js
+stack.yml

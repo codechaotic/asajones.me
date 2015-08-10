@@ -1,0 +1,44 @@
+---
+  machine:
+    node:
+      version: 0.12.6
+    services:
+      - mongodb
+    environment:
+      PATH: ${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin
+      TEST_MONGO_URL: mongodb://localhost:27017/test
+      TEST_PORT: 3000
+      MODULUS_PROJECT: welcome
+      MODULUS_TYPE: "Node.js"
+      MODULUS_SIZE: 192
+      BUILD_DIR: dist/
+
+  dependencies:
+    override:
+      - npm install
+      - bower install
+
+  test:
+    pre:
+      - gulp build
+      - npm install:
+          pwd: ${BUILD_DIR}
+      - npm start:
+          pwd: ${BUILD_DIR}
+          environment:
+            MONGO_URL: ${TEST_MONGO_URL}
+            PORT: ${TEST_PORT}
+          background: true
+      - webdriver-manager update
+      - webdriver-manager start:
+          background: true
+    override:
+      - protractor protractor.config.js:
+          environment:
+            PORT: ${TEST_PORT}
+
+  deployment:
+    production:
+      branch: master
+      commands:
+        - ./deploy.sh

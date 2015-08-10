@@ -1,0 +1,25 @@
+{
+  "name": "Sample",
+  "version": "0.0.0",
+  "homepage": "none",
+  "authors": [
+    "Asa Jones [codechaotic] <thinkinfractals@gmail.com>"
+  ],
+  "description": "basic app for experimentation",
+  "main": "server.js",
+  "license": "MIT",
+  "dependencies": {
+    "modernizr": "~2.8.3",
+    "angular-route": "~1.4.3",
+    "angular": "~1.4.3",
+    "pure": "~0.6.0"
+  },
+  "overrides": {
+    "modernizr": {
+      "main": "modernizr.js"
+    },
+    "pure": {
+      "ignore": true
+    }
+  }
+}
