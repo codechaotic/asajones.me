@@ -12,7 +12,9 @@
   module.exports = function() {
     return buildServer()
       .then(function() {
-        gulp.watch(loc.src.server + pat.all, ['build-server'])
+        gulp.watch(loc.src.server + pat.all, function(event) {
+          buildServer()
+        })
       })
   }
 
