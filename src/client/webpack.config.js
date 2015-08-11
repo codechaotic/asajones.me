@@ -6,7 +6,6 @@
   var CompressionPlugin = require("compression-webpack-plugin")
   var HtmlWebpackPlugin = require('html-webpack-plugin')
 
-  //var stylelint = require('stylelint')
   var cssnano = require('cssnano')
 
   var fs = require('fs')
@@ -21,7 +20,7 @@
     },
     output: {
       path: ROOT,
-      filename: '[name].js',
+      filename: '[name]-[chunkhash].js',
       chunkFilename: "[id].js"
     },
     resolve: {
@@ -35,7 +34,7 @@
         },
         {
           test: /\.js$/,
-          loader: 'uglify!ng-annotate!babel!jshint',
+          loader: 'uglify!ng-annotate!jshint',
           exclude: /node_modules|bower_components/
         },
         {
@@ -65,7 +64,7 @@
     plugins: [
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin(),
-      new ExtractTextPlugin("[name].css"),
+      new ExtractTextPlugin("[name]-[chunkhash].css"),
       new CompressionPlugin({
           asset: "{file}.gz",
           algorithm: "gzip",

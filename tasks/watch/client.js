@@ -9,7 +9,7 @@
   var loc = require('../config/loc')
   var pat = require('../config/pat')
   var webpack_config = require(loc.src.client + '/webpack.config')
-
+  //custom
   var log = require('../custom/log')
 
   module.exports = function() {
@@ -19,8 +19,11 @@
     config.resolve.root = loc.src.client
     config.output.path  = loc.pub_dir
     var compiler = webpack(config)
-    compiler.run(function(err, stats) {
-      if(err) if(err) deferred.reject(log.fatal(err))
+    compiler.watch({
+      aggregateTimeout: 300,
+      poll: true
+    }, function(err, stats) {
+      if(err) deferred.reject(log.fatal(err))
       var jsonStats = stats.toJson();
       if(jsonStats.errors.length > 0) log.error(jsonStats.errors)
       if(jsonStats.warnings.length > 0) log.warn(jsonStats.warnings)
