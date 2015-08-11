@@ -13,6 +13,7 @@
   "scripts": {
     "start": "node dist/init.js"
   },
+  "license": "UNLICENSED",
   "homepage": "https://github.com/codechaotic/asajones.me#readme",
   "devDependencies": {
     "angular": "^1.4.3",
@@ -24,6 +25,7 @@
     "csslint-loader": "^0.2.0",
     "cssnano": "^2.1.1",
     "extract-text-webpack-plugin": "^0.8.2",
+    "fstream": "^1.0.7",
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.6",
     "html-webpack-plugin": "^1.6.1",
@@ -32,12 +34,14 @@
     "less": "^2.5.1",
     "less-loader": "^2.2.0",
     "ng-annotate-loader": "0.0.6",
+    "npm": "^2.13.4",
     "pad": "^0.1.0",
     "phantomjs": "^1.9.17",
     "postcss-loader": "^0.5.1",
     "protractor": "^2.1.0",
     "purecss": "^0.6.0",
     "style-loader": "^0.12.3",
+    "tar": "^2.1.1",
     "uglify-loader": "^1.2.0",
     "webpack": "^1.11.0"
   },

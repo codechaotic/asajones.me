@@ -15,3 +15,4 @@ package.json
 phantomjsdriver.log
 protractor.config.js
 stack.yml
+*.tar
