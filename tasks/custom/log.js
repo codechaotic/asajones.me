@@ -17,7 +17,8 @@
       if(Array.isArray(msg)) msg.forEach(function(m) {
         splitAndLog(m)
       })
-      else splitAndLog(msg)
+      else if(msg) splitAndLog(msg)
+      else splitAndLog('undefined')
       if(kill) process.exit(kill)
     }
 

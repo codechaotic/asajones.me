@@ -28,6 +28,7 @@
       if(jsonStats.errors.length > 0) log.error(jsonStats.errors)
       if(jsonStats.warnings.length > 0) log.warn(jsonStats.warnings)
       log.info(stats.toString({colors: true}))
+      deferred.resolve()
     })
     return deferred.promise
   }
