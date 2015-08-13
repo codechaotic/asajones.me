@@ -4,7 +4,8 @@
   exports.config = {
     mongo_url:          process.env.MONGO_URL || 'mongodb://localhost/test',
     port:               process.env.PORT || 8080,
-    public_dir:         'public'
+    public_dir:         '/public',
+    hashes:             require('../hash.json')
   }
 
   //@autoexport

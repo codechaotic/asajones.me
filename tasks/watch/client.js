@@ -32,17 +32,16 @@
       if(jsonStats.errors.length > 0) log.error(jsonStats.errors)
       if(jsonStats.warnings.length > 0) log.warn(jsonStats.warnings)
       log.info(stats.toString({colors: true}))
+      var hashes = {}
       jsonStats.assets.forEach(function(asset) {
-        var parse = url.parse(asset.name)
-        var basename = path.basename(parse.pathname)
-        var dirname = path.dirname(parse.pathname)
-        var filepath = path.join(loc.pub_dir, parse.pathname)
-        var hashpath = path.join(loc.pub_dir, dirname, basename+'+HASH')
+        var file = url.parse(asset.name).pathname
+        if(file.match(/\.gz$/g)) return;
+        var filepath = path.join(loc.pub_dir, file)
         var contents = fs.readFileSync(filepath)
-        var hash = crypto.createHash('md5').update(contents).digest('hex')
-        fs.writeFileSync(hashpath,hash)
-        deferred.resolve()
+        hashes[file] = crypto.createHash('md5').update(contents).digest('hex')
       })
+      fs.writeFileSync(loc.dest_dir + '/hash.json',JSON.stringify(hashes,null,'  '))
+      deferred.resolve()
     })
     return deferred.promise
   }
