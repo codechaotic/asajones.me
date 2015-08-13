@@ -1,8 +1,10 @@
 (function() {
   'use strict';
 
-  require('./index.less');
+  require('./style/style.less');
 
-  module.exports = angular.module( 'app', [] );
+  module.exports = angular.module( 'app', [
+    require('./layout/nav.js').name
+  ] );
 
 })();
