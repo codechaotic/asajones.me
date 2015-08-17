@@ -1,17 +1,9 @@
-(function() {
-
-  //@autoexport
-  exports.config = {
+var path = require('path');
+var app_dir = path.relative(process.cwd(),__dirname);
+module.exports = function() {
+  return {
     mongo_url:          process.env.MONGO_URL || 'mongodb://localhost/test',
     port:               process.env.PORT || 8080,
-    public_dir:         '/public',
-    hashes:             require('../hash.json')
-  }
-
-  //@autoexport
-  exports.body = require('koa-body')
-
-  //@autoexport
-  exports.router = require('koa-router')
-
-})();
+    public_dir:         path.join(app_dir,'public')
+  };
+};

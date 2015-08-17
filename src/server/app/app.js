@@ -1,15 +1,12 @@
-(function() {
-  "use strict";
+var koa = require('koa');
 
-  var koa             = require('koa')
-  var send            = require('koa-send')
-
-  //@autoinject
-  exports.app = function(config, staticfiles, api_router) {
-    var app = koa()
-
-    app.use(staticfiles())
-    app.listen(config.port)
+module.exports = [
+  'config',
+  'staticfiles',
+  function(config, staticfiles) {
+    var app = koa();
+    app.use(staticfiles());
+    app.listen(config.port);
+    console.log('app started on port %s',config.port);
   }
-
-})()
+];
