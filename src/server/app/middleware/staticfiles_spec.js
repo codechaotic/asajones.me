@@ -1,179 +1,91 @@
-var Zeninjector = require('zeninjector');
-var koa = require('koa');
-var mock = require('mock-fs');
-var http = require('http');
+"use strict";
+var staticfiles = require('./staticfiles')
 
 describe('middleware staticfiles', function() {
-  var zen;
-  var app;
-  var server;
-  var options;
-  var NOW = 1000 /*1 second old*/
+  var next = function*() {}
+  var run = function(file) {
+    file = file || '/file';
+    this.sendSpy.and.returnValue(this.args[1].pub_dir+file);
+    var g = staticfiles.apply(null,this.args)().call(this.context, next())
+    for( let i = g.next(); !i.done; i = g.next(i.value)) { /* Do Nothing */ }
+  }
 
   beforeEach(function() {
-    zen = new Zeninjector();
-    zen.registerAndExport('config', {
-      public_dir: 'fakeapp/public'
-    });
-    zen.registerAndExport('hashes', {
-      'index.html': 'indexhash',
-      file1: 'file1hash'
-    });
-    zen.register('staticfiles',require('./staticfiles'));
-    zen.register('app', ['staticfiles', function(staticfiles) {
-      app = koa();
-      app.use(staticfiles());
-      server = http.createServer(app.callback()).listen(3000);
-    }]);
-    mock({
-      'fakeapp/public': {
-        'index.html': 'INDEX',
-        file1: mock.file({
-          content: 'FILE1',
-          ctime: new Date(NOW),
-          mtime: new Date(NOW)
-        })
-      }
-    });
-    options = {
-       hostname: 'localhost',
-       port: 3000,
-       path: '/',
-       headers: {
-         'Cache-Control': 'max-age=0'
-       }
-     };
-  });
-
-  afterEach(function(done) {
-    mock.restore();
-    server.close(done);
+    this.args = [
+      require('koa-send'),
+      { pub_dir: 'fake/public' },
+      { file: 'fakehash' }
+    ];
+    this.context = {
+      method: 'GET',
+      path: '/',
+      set: jasmine.createSpy('set'),
+      fresh: true
+    };
+    this.sendSpy = spyOn(this.args, '0');
   });
 
   it('retrieves files in the public directory', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        options.path = '/file1'
-        http.get(options,function(res) {
-          expect(res.statusCode).toEqual(200)
-          res.on('data', function (chunk) {
-            expect(chunk.toString()).toEqual('FILE1')
-          })
-          .on('end',done)
-        })
+    run.call(this)
+    expect(this.args[0]).toHaveBeenCalledWith(
+      jasmine.any(Object),
+      jasmine.any(String),
+      jasmine.objectContaining({
+        root: this.args[1].pub_dir
       })
+    )
+    done()
   });
 
-  it('retrieves \'index.html\' for default path \'/\'',function(done) {
-    zen.resolve('app')
-      .then(function() {
-        http.get(options,function(res) {
-          expect(res.statusCode).toEqual(200)
-          res.on('data', function (chunk) {
-            expect(chunk.toString()).toEqual('INDEX')
-          })
-          .on('end',done)
-        })
+  it('retrieves \'index.html\' for default path \'/\'', function(done) {
+    run.call(this)
+    expect(this.args[0]).toHaveBeenCalledWith(
+      jasmine.any(Object),
+      jasmine.any(String),
+      jasmine.objectContaining({
+        index: 'index.html'
       })
-  });
-
-  it('ignores requests for nonexistent file', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        options.path = '/notafile'
-        http.get(options,function(res) {
-          expect(res.statusCode).toEqual(404)
-          done()
-        })
-      })
+    )
+    done()
   });
 
   it('sets the Etag to the file content hash', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        options.path = '/file1'
-        http.get(options,function(res) {
-          expect(res.headers.etag).toEqual('file1hash')
-          done()
-        })
-      })
+    run.call(this)
+    expect(this.context.set).toHaveBeenCalledWith(
+      'Etag',
+      this.args[2]['file']
+    )
+    done()
   });
 
   it('sets 1 day expiration for html file', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        http.get(options,function(res) {
-          var cc = res.headers['cache-control'].split(',').map(function(p){
-            return p.trim()
-          });
-          expect(cc).toContain('max-age=86400000'/*One Day*/)
-          done()
-        })
-      })
+    run.call(this, '/file.html')
+    expect(this.context.set).toHaveBeenCalledWith(
+      'Cache-Control',
+      'max-age=86400000, must-revalidate'
+    )
+    done()
   });
 
   it('sets far-future expiration for non-html file', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        options.path = '/file1'
-        http.get(options,function(res) {
-          var cc = res.headers['cache-control'].split(',').map(function(p){
-            return p.trim()
-          });
-          expect(cc).toContain('max-age=31536000000'/*One Year*/)
-          done()
-        })
-      })
+    run.call(this)
+    expect(this.context.set).toHaveBeenCalledWith(
+      'Cache-Control',
+      'max-age=31536000000'
+    )
+    done()
   });
 
-  it('sets the Last-Modified header to the file\'s mtime', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        options.path = '/file1'
-        http.get(options,function(res) {
-          var lm = new Date(res.headers['last-modified']).getTime()
-          expect(lm).toEqual(new Date(NOW).getTime())
-          done()
-        })
-      })
+  it('sets status code 304 for fresh files', function(done) {
+    run.call(this)
+    expect(this.context.status).toEqual(304);
+    done()
   });
 
-  it('sets status code 304 for unchanged files', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        options.path = '/file1'
-        options.headers['If-Modified-Since'] = new Date(NOW).toUTCString()
-        options.headers['If-None-Match'] = 'file1hash'
-        http.get(options,function(res) {
-          expect(res.statusCode).toEqual(304)
-          done()
-        })
-      })
-  });
-
-  it('gives a fresh request for for a changed etag', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        options.path = '/file1'
-        options.headers['If-Modified-Since'] = new Date(NOW).toUTCString()
-        options.headers['If-None-Match'] = 'oldfile1hash'
-        http.get(options,function(res) {
-          expect(res.statusCode).toEqual(200)
-          done()
-        })
-      })
-  });
-
-  it('gives a fresh request for for a modified file', function(done) {
-    zen.resolve('app')
-      .then(function() {
-        options.path = '/file1'
-        options.headers['If-Modified-Since'] = new Date(NOW-1000).toUTCString()
-        options.headers['If-None-Match'] = 'file1hash'
-        http.get(options,function(res) {
-          expect(res.statusCode).toEqual(200)
-          done()
-        })
-      })
+  it('does not set status code for stale files', function(done) {
+    this.context.fresh = false;
+    run.call(this)
+    expect(this.context.status).not.toEqual(304);
+    done()
   });
 });
