@@ -1,8 +1,6 @@
-var Robe = require('robe');
+module.exports = db;
 
-module.exports = [
-  'config',
-  function(config) {
-    return Robe.connect(config.mongo_url);
-  }
-];
+db.$inject = [ 'robe', '_conf' ];
+function db(robe,_conf) {
+  return robe.connect(_conf.mongo_url);
+}

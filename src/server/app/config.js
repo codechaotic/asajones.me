@@ -1,9 +1,10 @@
-var path = require('path');
-var app_dir = path.relative(process.cwd(),__dirname);
-module.exports = function() {
+module.exports = _conf;
+
+function _conf() {
   return {
     mongo_url:          process.env.MONGO_URL || 'mongodb://localhost/test',
     port:               process.env.PORT || 8080,
-    public_dir:         path.join(app_dir,'public')
+    root_dir:           __dirname,
+    pub_dir:            __dirname + '/public'
   };
-};
+}

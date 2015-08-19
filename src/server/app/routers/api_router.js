@@ -1,10 +1,9 @@
-module.exports = [
-  'router',
-  'options_router',
-  function(router, options_router) {
-    var api_router = new router();
-    return api_router
-      .use('/options', options_router)
-      .routes();
-  }
-];
+module.exports = api_router;
+
+api_router.$inject = ['router', 'options_router'];
+function api_router(router,options_router) {
+  var api = new router();
+  return api
+    .use('/options', options_router)
+    .routes();
+}
