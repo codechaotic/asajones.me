@@ -1,11 +1,11 @@
 var Q = require('q')
 var webpack = require('webpack')
 
-var log = require('./lib/logger')
+var log = require('../lib/logger')
 
 module.exports = function() {
   var deferred = Q.defer();
-  var compiler = webpack(Object.create(require('./config/server.webpack')));
+  var compiler = webpack(Object.create(require('../config/server.webpack')));
   compiler.run(function(err, stats) {
     if(err) deferred.reject(log.fatal(err))
     var jsonStats = stats.toJson();

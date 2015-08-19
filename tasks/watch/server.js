@@ -1,11 +1,11 @@
 var Q = require('q');
 var webpack = require('webpack');
 var nodemon = require('nodemon');
-var log = require('./lib/logger');
+var log = require('../lib/logger');
 
 module.exports = function() {
   var deferred = Q.defer();
-  var compiler = webpack(Object.create(require('./config/server.webpack')));
+  var compiler = webpack(Object.create(require('../config/server.webpack')));
   compiler.watch({
     aggregateTimeout: 300,
     poll: true

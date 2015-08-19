@@ -1,7 +1,9 @@
 require('.');
+
 // Necesary for angular tests on webpack
 var module = angular.mock.module;
 var inject = angular.mock.inject;
+var expect = chai.expect;
 
 describe('RouteHomeController', function() {
 
@@ -13,10 +15,10 @@ describe('RouteHomeController', function() {
     $controller = _$controller_;
   }));
 
-  describe('title', function() {
+  describe('#title', function() {
     it('equals homepage', function() {
       var ctrl = $controller('RouteHomeController');
-      expect(ctrl.title).toEqual('homepage');
+      expect(ctrl.title).to.equal('homepage');
     });
   });
 });

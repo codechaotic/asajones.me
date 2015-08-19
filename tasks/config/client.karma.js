@@ -1,21 +1,20 @@
-var webpack = require('webpack');
 module.exports = function(config) {
     config.set({
         basePath: '../../',
         browsers: ['PhantomJS'],
         files: [
-            'node_modules/angular/angular.js',
-            'node_modules/angular-route/angular-route.js',
-            'node_modules/angular-mocks/angular-mocks.js',
-            'src/client/**/*_spec.js'
+          require.resolve('angular/angular'),
+          require.resolve('angular-route/angular-route'),
+          require.resolve('angular-mocks/angular-mocks'),
+          'src/client/**/*_spec.js'
         ],
-        frameworks: ['jasmine'],
+        frameworks: ['mocha','chai'],
+        reporters: ['mocha'],
         preprocessors: {
-            'src/client/**/*_spec.js': ['webpack']
+          'src/client/**/*_spec.js': ['webpack']
         },
         webpack: {
           module: {
-            devtool: 'eval',
             output: {
               path: __dirname + '/temp',
               filename: '[name].js'
@@ -41,12 +40,7 @@ module.exports = function(config) {
         },
         webpackMiddleware: {
           noInfo: true
-        },
-        plugins: [
-          require('karma-jasmine'),
-          require('karma-webpack'),
-          require('karma-phantomjs-launcher')
-        ]
+        }
 
     });
 };

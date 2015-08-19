@@ -1,32 +1,21 @@
+"use-strict";
+
 require('harmonize')(['harmony-generators','harmony-scoping']);
 
-var gulp = require('gulp')
-var gulpdir = './tasks'
+var Q = require('q');
+var gulp = require('gulp');
 
-gulp.task('build-client', require(gulpdir+'/build-client'))
-gulp.task('build-server', require(gulpdir+'/build-server'))
+var gulpdir = './tasks';
 
-gulp.task('watch-client', require(gulpdir+'/watch-client'))
-gulp.task('watch-server', require(gulpdir+'/watch-server'))
+var build = require(gulpdir+'/build');
+var watch = require(gulpdir+'/watch');
+var test = require(gulpdir+'/test');
+var run = require(gulpdir+'/run');
 
-gulp.task('test-server', require(gulpdir+'/test-server'))
-gulp.task('test-client', require(gulpdir+'/test-client'))
-
-gulp.task('build',[
-  'build-client',
-  'build-server'
-])
-
-gulp.task('watch',[
-  'watch-client',
-  'watch-server'
-])
-
-gulp.task('test',[
-  'test-server',
-  'test-client'
-])
-
-gulp.task('run', [
-    'watch'
-], require(gulpdir+'/run'))
+gulp.task('build', build)
+gulp.task('watch', watch)
+gulp.task('test', test)
+gulp.task('run', function() {
+  return watch()
+    .then(run)
+})

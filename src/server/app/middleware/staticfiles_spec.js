@@ -1,91 +1,123 @@
 "use strict";
+
+var co = require('co');
+var chai = require('chai');
+var sinon = require('sinon');
+var sinonChai = require('sinon-chai');
+var expect = chai.expect;
+chai.use(sinonChai);
+
 var staticfiles = require('./staticfiles')
 
-describe('middleware staticfiles', function() {
-  var next = function*() {}
-  var run = function(file) {
-    file = file || '/file';
-    this.sendSpy.and.returnValue(this.args[1].pub_dir+file);
-    var g = staticfiles.apply(null,this.args)().call(this.context, next())
-    for( let i = g.next(); !i.done; i = g.next(i.value)) { /* Do Nothing */ }
+describe('module staticfiles', function() {
+  var arg
+  var ctx
+
+  function run(args, ctx) {
+    var next = function*() {}
+    var mw = staticfiles.call(null, args.send, args.conf, args.hash)
+    var fn = co.wrap(mw)
+    return fn.call(ctx, next())
   }
 
   beforeEach(function() {
-    this.args = [
-      require('koa-send'),
-      { pub_dir: 'fake/public' },
-      { file: 'fakehash' }
-    ];
-    this.context = {
+    // default setup
+    arg = {
+      send: sinon.stub().returns(Promise.resolve('fake/public/file')),
+      conf: {
+        pub_dir: 'fake/public'
+      },
+      hash: {
+        file: 'fakehash'
+      }
+    };
+    ctx = {
       method: 'GET',
       path: '/',
-      set: jasmine.createSpy('set'),
+      set: sinon.spy(),
       fresh: true
     };
-    this.sendSpy = spyOn(this.args, '0');
   });
 
-  it('retrieves files in the public directory', function(done) {
-    run.call(this)
-    expect(this.args[0]).toHaveBeenCalledWith(
-      jasmine.any(Object),
-      jasmine.any(String),
-      jasmine.objectContaining({
-        root: this.args[1].pub_dir
-      })
-    )
-    done()
+  describe('compatibility', function() {
+    it('injects send, conf, and hash', function(done) {
+      expect(staticfiles.$inject).to.deep.equal([ 'send', 'conf', 'hash' ])
+      done();
+    })
+
+    it('is named staticfiles', function(done) {
+      expect(staticfiles.name).to.equal('staticfiles')
+      done();
+    })
   });
 
-  it('retrieves \'index.html\' for default path \'/\'', function(done) {
-    run.call(this)
-    expect(this.args[0]).toHaveBeenCalledWith(
-      jasmine.any(Object),
-      jasmine.any(String),
-      jasmine.objectContaining({
-        index: 'index.html'
-      })
-    )
-    done()
+  describe('configuration', function() {
+    it('uses the public directory', function(done) {
+      run(arg,ctx)
+        .then(function() {
+          expect(arg.send).to.have.been.calledWith(
+            sinon.match.object,
+            sinon.match.string,
+            sinon.match.has('root', arg.conf.pub_dir)
+          )
+        })
+        .then(done)
+    });
+
+    it('uses index.html for default path', function(done) {
+      run(arg,ctx)
+        .then(function() {
+          expect(arg.send).to.have.been.calledWith(
+            sinon.match.object,
+            sinon.match.string,
+            sinon.match.has('index', 'index.html')
+          )
+        })
+        .then(done)
+    });
   });
 
-  it('sets the Etag to the file content hash', function(done) {
-    run.call(this)
-    expect(this.context.set).toHaveBeenCalledWith(
-      'Etag',
-      this.args[2]['file']
-    )
-    done()
-  });
+  describe('actions', function() {
+    it('sets Etag header to file hash', function(done) {
+      run(arg,ctx)
+        .then(function() {
+          expect(ctx.set).to.have.been.calledWith(
+            'Etag',
+            arg.hash['file']
+          )
+        })
+        .then(done)
+    });
 
-  it('sets 1 day expiration for html file', function(done) {
-    run.call(this, '/file.html')
-    expect(this.context.set).toHaveBeenCalledWith(
-      'Cache-Control',
-      'max-age=86400000, must-revalidate'
-    )
-    done()
-  });
+    it('sets far-future expiration', function(done) {
+      run(arg,ctx)
+        .then(function() {
+          expect(ctx.set).calledWith(
+            'Cache-Control',
+            'max-age=31536000000'
+          )
+        })
+        .then(done)
+    });
 
-  it('sets far-future expiration for non-html file', function(done) {
-    run.call(this)
-    expect(this.context.set).toHaveBeenCalledWith(
-      'Cache-Control',
-      'max-age=31536000000'
-    )
-    done()
-  });
+    it('sets single day expiration if file extension is .html', function(done) {
+      arg.send.returns(Promise.resolve('fake/public/file.html'));
+      run(arg,ctx)
+        .then(function() {
+          expect(ctx.set).to.have.been.calledWith(
+            'Cache-Control',
+            'max-age=86400000, must-revalidate'
+          )
+        })
+        .then(done)
+    });
 
-  it('sets status code 304 for fresh files', function(done) {
-    run.call(this)
-    expect(this.context.status).toEqual(304);
-    done()
-  });
-
-  it('does not set status code for stale files', function(done) {
-    this.context.fresh = false;
-    run.call(this)
-    expect(this.context.status).not.toEqual(304);
-    done()
+    it('sets status 304 for fresh files', function(done) {
+      run(arg,ctx)
+        .then(function() {
+          expect(ctx.status).to.equal(304);
+        })
+        .then(done)
+    });
   });
 });

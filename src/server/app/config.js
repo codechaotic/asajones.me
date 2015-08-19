@@ -1,6 +1,6 @@
-module.exports = _conf;
+module.exports = conf;
 
-function _conf() {
+function conf() {
   return {
     mongo_url:          process.env.MONGO_URL || 'mongodb://localhost/test',
     port:               process.env.PORT || 8080,
