@@ -1,5 +1,6 @@
+require('harmonize')(['harmony-generators','harmony-scoping']);
+
 var gulp = require('gulp')
-require('harmonize')();
 var gulpdir = './tasks'
 
 gulp.task('build-client', require(gulpdir+'/build-client'))
@@ -9,6 +10,7 @@ gulp.task('watch-client', require(gulpdir+'/watch-client'))
 gulp.task('watch-server', require(gulpdir+'/watch-server'))
 
 gulp.task('test-server', require(gulpdir+'/test-server'))
+gulp.task('test-client', require(gulpdir+'/test-client'))
 
 gulp.task('build',[
   'build-client',
@@ -21,7 +23,8 @@ gulp.task('watch',[
 ])
 
 gulp.task('test',[
-  'test-server'
+  'test-server',
+  'test-client'
 ])
 
 gulp.task('run', [
