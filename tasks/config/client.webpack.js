@@ -41,7 +41,7 @@ module.exports = {
         loaders: [
           'uglify?compress',
           'ng-annotate',
-          'jshint'
+          'jshint?esnext'
         ],
         exclude: /node_modules|bower_components/
       },

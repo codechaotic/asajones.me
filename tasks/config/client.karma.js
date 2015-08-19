@@ -1,37 +1,51 @@
+var webpack = require('webpack');
 module.exports = function(config) {
     config.set({
         basePath: '../../',
-        // ... normal karma configuration
         browsers: ['PhantomJS'],
         files: [
-            // all files ending in "_test"
-            'test/*_spec.js',
-            'test/**/*_spec.js'
-            // each file acts as entry point for the webpack configuration
+            'node_modules/angular/angular.js',
+            'node_modules/angular-route/angular-route.js',
+            'node_modules/angular-mocks/angular-mocks.js',
+            'src/client/**/*_spec.js'
         ],
         frameworks: ['jasmine'],
         preprocessors: {
-            // add webpack as preprocessor
-            'test/*_spec.js': ['webpack'],
-            'test/**/*_spec.js': ['webpack']
+            'src/client/**/*_spec.js': ['webpack']
         },
-
         webpack: {
-            // karma watches the test entry points
-            // (you don't need to specify the entry option)
-            // webpack watches dependencies
-
-            // webpack configuration
+          module: {
+            devtool: 'eval',
+            output: {
+              path: __dirname + '/temp',
+              filename: '[name].js'
+            },
+            resolve: {
+              extensions: ["", ".js"]
+            },
+            loaders: [
+              {
+                test: /\.js$/,
+                loaders: [
+                  'ng-annotate',
+                  'jshint?esnext'
+                ],
+                exclude: /node_modules|bower_components/
+              },
+              {
+                test: /\.html/,
+                loader: 'raw'
+              }
+            ]
+          }
         },
-
         webpackMiddleware: {
-            // webpack-dev-middleware configuration
-            // i. e.
-            noInfo: true
+          noInfo: true
         },
-
         plugins: [
-            require("karma-webpack")
+          require('karma-jasmine'),
+          require('karma-webpack'),
+          require('karma-phantomjs-launcher')
         ]
 
     });
