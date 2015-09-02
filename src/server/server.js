@@ -6,6 +6,7 @@ zen.registerAndExport('crypto', require('crypto'));
 zen.registerAndExport('fs',     require('fs'));
 zen.registerAndExport('glob',   require('glob'));
 zen.registerAndExport('koa',    require('koa'));
+zen.registerAndExport('pkg',    require('package.json'));
 zen.registerAndExport('path',   require('path'));
 zen.registerAndExport('robe',   require('robe'));
 zen.registerAndExport('router', require('koa-router'));

@@ -4,7 +4,6 @@ var path = require('path');
 
 var src = process.cwd() + '/src/server'
 var dest = process.cwd() + '/dist'
-var pkg = require(process.cwd()+'/package.json')
 var webpack = require('webpack')
 
 var nodeModules = {};
@@ -28,7 +27,10 @@ module.exports = {
     chunkFilename: '[name].js'
   },
   resolve: {
-    root: src
+    root: src,
+    alias: {
+      'package.json': process.cwd()+'/package.json'
+    }
   },
   module: {
     loaders: [
@@ -36,6 +38,10 @@ module.exports = {
         test: /\.js$/,
         loader: 'jshint?esnext',
         exclude: /node_modules/
+      },
+      {
+        test: /\.json$/,
+        loader: 'json'
       }
     ]
   },
@@ -45,9 +51,6 @@ module.exports = {
   },
   externals: nodeModules,
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"init", /* filename= */"init.js"),
-    new webpack.BannerPlugin('require("source-map-support").install();',
-                             { raw: true, entryOnly: false })
-  ],
-  devtool: 'sourcemap'
+    new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"init", /* filename= */"init.js")
+  ]
 }

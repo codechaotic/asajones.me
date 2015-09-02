@@ -6,7 +6,10 @@
     "type": "git",
     "url": "https://github.com/codechaotic/asajones.me"
   },
-  "author": "codechaotic <thinkinfractals@gmail.com>",
+  "author": {
+    "name": "Asa Jones",
+    "email": "thinkinfractals@gmail.com"
+  },
   "bugs": {
     "url": "https://github.com/codechaotic/asajones.me/issues"
   },
@@ -34,6 +37,7 @@
     "html-webpack-plugin": "^1.6.1",
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
+    "json-loader": "^0.5.2",
     "karma": "^0.13.9",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.2.0",
