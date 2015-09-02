@@ -7,15 +7,15 @@ var sinonChai = require('sinon-chai');
 var expect = chai.expect;
 chai.use(sinonChai);
 
-var staticfiles = require('./staticfiles')
+var static_middleware = require('./static_middleware')
 
-describe('module staticfiles', function() {
+describe('module static_middleware', function() {
   var arg
   var ctx
 
   function run(args, ctx) {
     var next = function*() {}
-    var mw = staticfiles.call(null, args.send, args.conf, args.hash)
+    var mw = static_middleware.call(null, args.send, args.conf, args.hash)
     var fn = co.wrap(mw)
     return fn.call(ctx, next())
   }
@@ -41,12 +41,12 @@ describe('module staticfiles', function() {
 
   describe('compatibility', function() {
     it('injects send, conf, and hash', function(done) {
-      expect(staticfiles.$inject).to.deep.equal([ 'send', 'conf', 'hash' ])
+      expect(static_middleware.$inject).to.deep.equal([ 'send', 'conf', 'hash' ])
       done();
     })
 
-    it('is named staticfiles', function(done) {
-      expect(staticfiles.name).to.equal('staticfiles')
+    it('is named static_middleware', function(done) {
+      expect(static_middleware.name).to.equal('static_middleware')
       done();
     })
   });

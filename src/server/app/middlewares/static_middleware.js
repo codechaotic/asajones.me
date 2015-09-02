@@ -1,7 +1,7 @@
-module.exports = staticfiles;
+module.exports = static_middleware;
 
-staticfiles.$inject = [ 'send', 'conf', 'hash' ];
-function staticfiles(send, conf, hash) {
+static_middleware.$inject = [ 'send', 'conf', 'hash' ];
+function static_middleware(send, conf, hash) {
   return function*(next) {
     if(this.method == 'HEAD' || this.method == 'GET'){
       var filepath = yield send(this, this.path, {
