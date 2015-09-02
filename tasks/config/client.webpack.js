@@ -63,7 +63,7 @@ module.exports = {
   postcss: function () {
     return [
       cssnano({
-        comments: {removeAll:true},
+        discardComments: {removeAll:true},
         autoprefixer: {
           remove: false,
           browsers: [
