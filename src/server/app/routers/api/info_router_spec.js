@@ -13,8 +13,6 @@ describe('module info_router', function() {
   var spies;
   var mock_router;
   var mock_pkg;
-  var res;
-  var routes;
 
   beforeEach(function() {
     spies = {
@@ -25,9 +23,9 @@ describe('module info_router', function() {
     }
 
     mock_router = function router() {
-      this.mw = 'fakemw';
+      this.opts = arguments[0]
       this.get = spies.router.get.returns(this);
-      this.routes = spies.router.routes.returns(this.mw);
+      this.routes = spies.router.routes.returns(this);
     };
 
     mock_pkg = {
@@ -56,15 +54,11 @@ describe('module info_router', function() {
       routes = new mock_router();
     });
 
-    it('is an instance of router', function() {
-      expect(res).to.equal(routes.mw);
+    it('is a router', function() {
+      expect(res).to.be.an.instanceof(mock_router);
     });
 
-    it('handles get requests to /', function() {
-      expect(spies.router.get).to.have.been.calledWith('/');
-    });
-
-    describe('GET /', function() {
+    describe('middleware read_info', function() {
       var ctx;
       var fn;
 
@@ -74,7 +68,11 @@ describe('module info_router', function() {
         fn = co.wrap(mw);
       });
 
-      it('sets result body to package info', function() {
+      it('is mounted on GET /', function() {
+        expect(spies.router.get).to.have.been.calledWith('/');
+      });
+
+      it('sets body to package info', function() {
         fn.call(ctx, function*() {})
         expect(ctx.body).to.exist;
         expect(JSON.parse(ctx.body)).to.deep.equal(mock_pkg);

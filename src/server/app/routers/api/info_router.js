@@ -7,13 +7,15 @@ info_router.$inject = [
 
 function info_router(router, pkg) {
   return new router()
-    .get('/', function*(next) {
-      this.body = JSON.stringify({
-        name: pkg.name,
-        version: pkg.version,
-        author: pkg.author
-      });
-      yield* next;
-    })
+    .get('/', read_info)
     .routes();
+
+  function* read_info(next) {
+    this.body = JSON.stringify({
+      name: pkg.name,
+      version: pkg.version,
+      author: pkg.author
+    });
+    yield* next;
+  }
 }
