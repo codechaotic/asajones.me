@@ -1,6 +1,10 @@
 module.exports = info_router;
 
-info_router.$inject = ['router', 'pkg'];
+info_router.$inject = [
+  'router',
+  'pkg'
+];
+
 function info_router(router, pkg) {
   return new router()
     .get('/', function*(next) {

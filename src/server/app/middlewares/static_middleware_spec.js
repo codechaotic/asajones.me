@@ -10,64 +10,69 @@ chai.use(sinonChai);
 var static_middleware = require('./static_middleware')
 
 describe('module static_middleware', function() {
-  var arg
-  var ctx
-
-  function run(args, ctx) {
-    var next = function*() {}
-    var mw = static_middleware.call(null, args.send, args.conf, args.hash)
-    var fn = co.wrap(mw)
-    return fn.call(ctx, next())
-  }
+  var spies;
+  var mock_send;
+  var mock_conf;
+  var mock_hash;
 
   beforeEach(function() {
-    // default setup
-    arg = {
-      send: sinon.stub().returns(Promise.resolve('fake/public/file')),
-      conf: {
-        pub_dir: 'fake/public'
-      },
-      hash: {
-        file: 'fakehash'
+    spies = {
+      send: sinon.stub(),
+      ctx: {
+        set: sinon.spy()
       }
+    }
+
+    mock_send = spies.send.returns(Promise.resolve('fake/public/file'));
+    mock_conf = {
+      pub_dir: 'fake/public'
     };
-    ctx = {
-      method: 'GET',
-      path: '/',
-      set: sinon.spy(),
-      fresh: true
+    mock_hash = {
+      file: 'fakehash'
     };
   });
 
-  describe('compatibility', function() {
-    it('injects send, conf, and hash', function(done) {
+  describe('exports', function() {
+    it('injects send, conf, and hash', function() {
       expect(static_middleware.$inject).to.deep.equal([ 'send', 'conf', 'hash' ])
-      done();
     })
 
-    it('is named static_middleware', function(done) {
+    it('is named static_middleware', function() {
       expect(static_middleware.name).to.equal('static_middleware')
-      done();
     })
   });
 
-  describe('configuration', function() {
+  describe('middleware', function() {
+    var ctx;
+    var fn;
+
+    beforeEach(function() {
+      ctx = {
+        method: 'GET',
+        path: '/',
+        set: spies.ctx.set,
+        fresh: true
+      };
+      var mw = static_middleware(mock_send, mock_conf, mock_hash);
+      fn = co.wrap(mw)
+    });
+
     it('uses the public directory', function(done) {
-      run(arg,ctx)
+      fn.call(ctx, (function*() {})())
         .then(function() {
-          expect(arg.send).to.have.been.calledWith(
+          expect(spies.send).to.have.been.calledWith(
             sinon.match.object,
             sinon.match.string,
-            sinon.match.has('root', arg.conf.pub_dir)
+            sinon.match.has('root', mock_conf.pub_dir)
           )
         })
         .then(done)
     });
 
     it('uses index.html for default path', function(done) {
-      run(arg,ctx)
+      fn.call(ctx, (function*() {})())
         .then(function() {
-          expect(arg.send).to.have.been.calledWith(
+          expect(spies.send).to.have.been.calledWith(
             sinon.match.object,
             sinon.match.string,
             sinon.match.has('index', 'index.html')
@@ -75,24 +80,22 @@ describe('module static_middleware', function() {
         })
         .then(done)
     });
-  });
 
-  describe('actions', function() {
     it('sets Etag header to file hash', function(done) {
-      run(arg,ctx)
+      fn.call(ctx, (function*() {})())
         .then(function() {
-          expect(ctx.set).to.have.been.calledWith(
+          expect(spies.ctx.set).to.have.been.calledWith(
             'Etag',
-            arg.hash['file']
+            mock_hash['file']
           )
         })
         .then(done)
     });
 
     it('sets far-future expiration', function(done) {
-      run(arg,ctx)
+      fn.call(ctx, (function*() {})())
         .then(function() {
-          expect(ctx.set).calledWith(
+          expect(spies.ctx.set).calledWith(
             'Cache-Control',
             'max-age=31536000000'
           )
@@ -101,10 +104,10 @@ describe('module static_middleware', function() {
     });
 
     it('sets single day expiration if file extension is .html', function(done) {
-      arg.send.returns(Promise.resolve('fake/public/file.html'));
-      run(arg,ctx)
+      spies.send.returns(Promise.resolve('fake/public/file.html'));
+      fn.call(ctx, (function*() {})())
         .then(function() {
-          expect(ctx.set).to.have.been.calledWith(
+          expect(spies.ctx.set).to.have.been.calledWith(
             'Cache-Control',
             'max-age=86400000, must-revalidate'
           )
@@ -113,7 +116,7 @@ describe('module static_middleware', function() {
     });
 
     it('sets status 304 for fresh files', function(done) {
-      run(arg,ctx)
+      fn.call(ctx, (function*() {})())
         .then(function() {
           expect(ctx.status).to.equal(304);
         })

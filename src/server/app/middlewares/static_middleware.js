@@ -1,6 +1,11 @@
 module.exports = static_middleware;
 
-static_middleware.$inject = [ 'send', 'conf', 'hash' ];
+static_middleware.$inject = [
+  'send',
+  'conf',
+  'hash'
+];
+
 function static_middleware(send, conf, hash) {
   return function*(next) {
     if(this.method == 'HEAD' || this.method == 'GET'){

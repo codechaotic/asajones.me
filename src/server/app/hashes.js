@@ -1,6 +1,12 @@
 module.exports = hash;
 
-hash.$inject = ['fs', 'glob', 'crypto', 'conf'];
+hash.$inject = [
+  'fs',
+  'glob',
+  'crypto',
+  'conf'
+];
+
 function hash(fs, glob, crypto, conf) {
   var hashmap = {};
 
