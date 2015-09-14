@@ -2,9 +2,12 @@
 
 var co = require('co');
 var chai = require('chai');
+var chaiAsPromised = require("chai-as-promised");
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 var expect = chai.expect;
+
+chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
 var database_service = require('./database_service')
@@ -22,9 +25,9 @@ describe('module database_service', function() {
     };
 
     mock_robe = {
-      connect: spies.robe.connect.returns('robeconnection')
+      connect: spies.robe.connect.returns(Promise.resolve('robeconnection'))
     };
-    
+
     mock_conf = {
       mongo_url: 'fakemongourl'
     };
@@ -40,19 +43,4 @@ describe('module database_service', function() {
     })
   });
 
-  describe('service', function() {
-    var res
-
-    beforeEach(function() {
-      res = database_service(mock_robe, mock_conf);
-    })
-
-    it('uses the mongo url', function() {
-      expect(spies.robe.connect).to.have.been.calledWith(mock_conf.mongo_url);
-    });
-
-    it('is a robe connection', function() {
-      expect(res).to.equal('robeconnection')
-    });
-  });
 });

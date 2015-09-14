@@ -23,6 +23,7 @@
     "angular-mocks": "^1.4.4",
     "angular-route": "^1.4.3",
     "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
     "co": "^4.6.0",
     "compression-webpack-plugin": "codechaotic/compression-webpack-plugin",
     "css-loader": "^0.15.6",

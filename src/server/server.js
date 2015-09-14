@@ -1,7 +1,7 @@
 var Zeninjector = require('zeninjector');
 var zen = new Zeninjector();
 
-zen.registerAndExport('body',   require('koa-body'));
+zen.registerAndExport('body',   require('koa-body')());
 zen.registerAndExport('crypto', require('crypto'));
 zen.registerAndExport('fs',     require('fs'));
 zen.registerAndExport('glob',   require('glob'));
@@ -22,6 +22,6 @@ function requireAll(r) {
     var name = mod.name || mod._name_;
     if(!name) throw new Error('Unnamed dependency in module %s', t);
     if(mod.$inject) mod.$inject.push(mod);
-    zen.register(name,mod);
+    zen.register(name, mod);
   });
 }
