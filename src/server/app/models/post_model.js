@@ -1,18 +1,18 @@
-module.exports = article_model;
+module.exports = post_model;
 
-article_model.$inject = [
+post_model.$inject = [
   'database_service'
 ];
 
 /**
-* Schema and wrapper for articles
+* Schema and wrapper for posts
 *
-* @method article_model
+* @method post_model
 * @param {Robe Instance} database_service
 * @return {Object} Returns the model API
 */
-function article_model(database_service) {
-  var Article = database_service.collection('article', {
+function post_model(database_service) {
+  var post = database_service.collection('post', {
     rawMode: true,
     schema: {
       title: {
@@ -45,22 +45,22 @@ function article_model(database_service) {
     create: function* create(raw) {
       if(!raw || typeof raw !== 'object') return;
       raw.published = raw.modified = new Date();
-      return yield Article.insert(raw);
+      return yield post.insert(raw);
     },
     list: function* list() {
       var query = {};
-      return yield Article.find(query);
+      return yield post.find(query);
     },
     delByID: function* delByID(id) {
       if(!id) return;
       var query = { _id: id };
       var opts = { justOne: true };
-      return yield Article.remove(query, opts);
+      return yield post.remove(query, opts);
     },
     getByID: function* getByID(id) {
       if(!id) return;
       var query = { _id: id };
-      return yield Article.findOne(query);
+      return yield post.findOne(query);
     },
     setByID: function* setByID(id, raw) {
       if(!id || !raw) return;
@@ -70,7 +70,7 @@ function article_model(database_service) {
       var query = { _id: id };
       var update = { $set: raw };
       var opts = { multi: false };
-      return yield Article.update(query, update, opts);
+      return yield post.update(query, update, opts);
     }
   };
 }

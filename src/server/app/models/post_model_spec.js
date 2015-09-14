@@ -1,6 +1,6 @@
 /**
 * Module exports an object which exposes methods for operating on
-* the articles in the database. Encapsulates the model schema, validation,
+* the posts in the database. Encapsulates the model schema, validation,
 * defaults, and query definitions.
 */
 
@@ -15,28 +15,28 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
 var robe = require('robe');
-var article_model = require('./article_model');
+var post_model = require('./post_model');
 var database_service = require('../services/database_service');
 
 var test_config = {
   mongo_url: 'mongodb://localhost:27017/test'
 }
 
-describe('MODEL Article', function() {
+describe('MODEL post', function() {
   describe('module', function() {
     it('injects database_service', function() {
-      expect(article_model.$inject).to.deep.equal([
+      expect(post_model.$inject).to.deep.equal([
         'database_service'
       ]);
     });
 
-    it('is named article_model', function() {
-      expect(article_model.name).to.equal('article_model');
+    it('is named post_model', function() {
+      expect(post_model.name).to.equal('post_model');
     });
   })
 
   describe('result', function() {
-    var article;
+    var post;
     var model;
     var methods = [
       'create',
@@ -48,22 +48,22 @@ describe('MODEL Article', function() {
 
     var _empty = function() {
       return co(function* () {
-        yield article.remove({})
+        yield post.remove({})
       })
     }
 
     before(function(done) {
       database_service(robe, test_config)
         .then(function(db) {
-          article = db.collection('article', {rawMode: true});
-          model = article_model(db);
+          post = db.collection('post', {rawMode: true});
+          model = post_model(db);
         })
         .then(_empty)
         .then(done, done)
     })
 
     after(function(done) {
-      article.db.close()
+      post.db.close()
         .then(done, done);
     })
 

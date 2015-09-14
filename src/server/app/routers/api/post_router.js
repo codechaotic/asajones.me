@@ -1,21 +1,21 @@
-module.exports = article_router;
+module.exports = post_router;
 
-article_router.$inject = [
+post_router.$inject = [
   'router',
   'body',
-  'article_model'
+  'post_model'
 ];
 
 /**
-* Router for handling API requests for articles
+* Router for handling API requests for posts
 *
-* @method article_router
+* @method post_router
 * @param {Koa_Router Instance} router
 * @param {Koa_Body Instance} body
-* @param {Object} article_model
+* @param {Object} post_model
 * @return {Object} Returns a configured router middleware
 */
-function article_router(router, body, article_model) {
+function post_router(router, body, post_model) {
 
   var OK = 200;
   var BAD_REQUEST = 400;
@@ -76,7 +76,7 @@ function article_router(router, body, article_model) {
     .get('/list', function* (next) {
       yield* processRequest.call(this,
         function*() {
-          return yield article_model.list();
+          return yield post_model.list();
         },
         next
       );
@@ -85,7 +85,7 @@ function article_router(router, body, article_model) {
       yield* processRequest.call(this,
         function*() {
           var raw = this.request.body;
-          return yield article_model.create(raw);
+          return yield post_model.create(raw);
         },
         next
       );
@@ -94,7 +94,7 @@ function article_router(router, body, article_model) {
       yield* processRequest.call(this,
         function*(ctx) {
           var id = this.params.id;
-          return yield article_model.getByID(id);
+          return yield post_model.getByID(id);
         },
         next
       );
@@ -104,7 +104,7 @@ function article_router(router, body, article_model) {
         function*(ctx) {
           var id = this.params.id;
           var raw = this.request.body;
-          return yield article_model.setByID(id, raw);
+          return yield post_model.setByID(id, raw);
         },
         next
       );
@@ -113,7 +113,7 @@ function article_router(router, body, article_model) {
       yield* processRequest.call(this,
         function*(ctx) {
           var id = this.params.id;
-          return yield article_model.delByID(id);
+          return yield post_model.delByID(id);
         },
         next
       );

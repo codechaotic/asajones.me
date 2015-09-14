@@ -12,7 +12,7 @@ var api_router = require('./api_router')
 describe('module api_router', function() {
   var spies;
   var mock_info_router;
-  var mock_article_router;
+  var mock_post_router;
   var mock_router;
 
   beforeEach(function() {
@@ -24,7 +24,7 @@ describe('module api_router', function() {
     };
 
     mock_info_router = 'fake info router';
-    mock_article_router = 'fake article router';
+    mock_post_router = 'fake post router';
 
     mock_router = function router() {
       this.opts = arguments[0]
@@ -37,7 +37,7 @@ describe('module api_router', function() {
     it('injects router and info_router', function() {
       expect(api_router.$inject).to.deep.equal([
         'router',
-        'article_router',
+        'post_router',
         'info_router'
       ]);
     });
@@ -52,7 +52,7 @@ describe('module api_router', function() {
     var routes;
 
     beforeEach(function() {
-      res = api_router(mock_router, mock_article_router, mock_info_router);
+      res = api_router(mock_router, mock_post_router, mock_info_router);
       routes = new mock_router();
     });
 
@@ -70,10 +70,10 @@ describe('module api_router', function() {
         mock_info_router);
     });
 
-    it('mounts article_router onto /article', function() {
+    it('mounts post_router onto /post', function() {
       expect(spies.router.use).to.have.been.calledWith(
-        '/article',
-        mock_article_router);
+        '/post',
+        mock_post_router);
     });
 
   });
