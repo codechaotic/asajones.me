@@ -14,7 +14,15 @@ zen.registerAndExport('send',   require('koa-send'));
 
 requireAll(require.context('./app/', true, /^(?:.{0,4}|.*(?!_spec).{5})\.js$/));
 
-zen.resolve('app');
+zen.resolve('app')
+  .then(function(app) {
+    console.log(app)
+  })
+  .catch(function(err) {
+    console.log(err);
+    console.log('Process Cannot Continue. Exiting (err 1)')
+    process.exit(1);
+  });
 
 function requireAll(r) {
   r.keys().forEach(function(t) {

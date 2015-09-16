@@ -6,5 +6,5 @@ database_service.$inject = [
 ];
 
 function database_service(robe, conf) {
-  return robe.connect(conf.mongo_url);
+  return robe.connect(conf.mongo_url)
 }

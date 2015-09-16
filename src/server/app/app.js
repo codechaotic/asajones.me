@@ -13,4 +13,5 @@ function app(koa, conf, static_middleware, api_router) {
   server.use(api_router);
   server.listen(conf.port);
   console.log('app started on port %s',conf.port);
+  return server;
 }
