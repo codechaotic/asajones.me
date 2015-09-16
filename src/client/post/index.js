@@ -1,4 +1,6 @@
-module.exports = angular.module( 'app.post', [
-  require('./list').name,
-  require('./form').name
-]);
+module.exports = angular.module( 'app.post', [ ])
+  .controller('PostController', require('./post.controller'))
+  .directive('postView', require('./view.directive'))
+  .directive('postEdit', require('./edit.directive'))
+  .directive('postSummary', require('./summary.directive'))
+  .directive('postArchive', require('./archive.directive'))
