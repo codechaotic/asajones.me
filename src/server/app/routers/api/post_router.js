@@ -23,34 +23,22 @@ function post_router(router, body, post_model) {
   var INTERNAL_SERVER_ERROR = 500;
 
   function success(data) {
-    this.body = JSON.stringify({
-      success: true,
-      data: data
-    });
+    this.body = JSON.stringify(data);
     this.status = OK;
   }
 
   function badRequest() {
-    this.body = JSON.stringify({
-      success: false,
-      error: 'bad request'
-    });
+    this.body = 'bad request';
     this.status = BAD_REQUEST;
   }
 
   function serverError(err) {
-    this.body = JSON.stringify({
-      success: false,
-      error: err
-    });
+    this.body = JSON.stringify(err);
     this.status = INTERNAL_SERVER_ERROR;
   }
 
   function notFound() {
-    this.body = JSON.stringify({
-      success: false,
-      error: 'not found'
-    });
+    this.body = 'not found';
     this.status = NOT_FOUND;
   }
 
@@ -73,7 +61,7 @@ function post_router(router, body, post_model) {
   }
 
   return new router()
-    .get('/list', function* (next) {
+    .get('/', function* (next) {
       yield* processRequest.call(this,
         function*() {
           return yield post_model.list();
@@ -81,7 +69,7 @@ function post_router(router, body, post_model) {
         next
       );
     })
-    .post('/create', body, function*(next) {
+    .post('/', body, function*(next) {
       yield* processRequest.call(this,
         function*() {
           var raw = this.request.body;
@@ -90,7 +78,7 @@ function post_router(router, body, post_model) {
         next
       );
     })
-    .get('/id/:id', function* (next) {
+    .get('/:id', function* (next) {
       yield* processRequest.call(this,
         function*(ctx) {
           var id = this.params.id;
@@ -99,7 +87,7 @@ function post_router(router, body, post_model) {
         next
       );
     })
-    .put('/id/:id', body, function* (next) {
+    .put('/:id', body, function* (next) {
       yield* processRequest.call(this,
         function*(ctx) {
           var id = this.params.id;
@@ -109,7 +97,7 @@ function post_router(router, body, post_model) {
         next
       );
     })
-    .delete('/id/:id', function* (next) {
+    .delete('/:id', function* (next) {
       yield* processRequest.call(this,
         function*(ctx) {
           var id = this.params.id;

@@ -1,7 +1,6 @@
 require('./app.less');
 
 var app = module.exports = angular.module( 'app', [
-  require('./core').name,
   require('./route').name,
   require('./post').name
 ] );

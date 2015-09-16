@@ -4,8 +4,8 @@ postEdit.$inject = [];
 function postEdit() {
   return {
     restrict: 'E',
-    controller: 'PostController',
-    controllerAs: 'postCTRL',
+    controller: 'EditController',
+    controllerAs: 'editCTRL',
     template: require('./edit.template.html')
   };
 }

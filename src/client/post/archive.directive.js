@@ -4,8 +4,8 @@ postArchive.$inject = [];
 function postArchive() {
   return {
     restrict: 'E',
-    controller: 'PostController',
-    controllerAs: 'postCTRL',
+    controller: 'ArchiveController',
+    controllerAs: 'archiveCTRL',
     template: require('./archive.template.html')
   };
 }
