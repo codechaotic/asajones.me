@@ -20,8 +20,9 @@
   "homepage": "https://github.com/codechaotic/asajones.me#readme",
   "devDependencies": {
     "angular": "^1.4.3",
+    "angular-resource": "^1.4.5",
+    "angular-ui-router": "^0.2.15",
     "angular-mocks": "^1.4.4",
-    "angular-route": "^1.4.3",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "co": "^4.6.0",

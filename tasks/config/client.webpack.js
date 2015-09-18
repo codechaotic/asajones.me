@@ -87,7 +87,7 @@ module.exports = {
         minRatio: 0.8
     }),
     new HtmlWebpackPlugin({
-      templateContent: fs.readFileSync(src + '/app.template.html').toString(),
+      templateContent: fs.readFileSync(src + '/template.html').toString(),
       inject: true // Inject all scripts into the body
     })
   ]

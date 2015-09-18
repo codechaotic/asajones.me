@@ -4,8 +4,8 @@ postSummary.$inject = [];
 function postSummary() {
   return {
     restrict: 'E',
-    controller: 'PostController',
-    controllerAs: 'postCTRL',
+    controller: 'PostSummaryController',
+    controllerAs: 'postSummaryCTRL',
     template: require('./summary.template.html')
   };
 }

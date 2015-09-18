@@ -3,9 +3,11 @@ module.exports = postArchive;
 postArchive.$inject = [];
 function postArchive() {
   return {
-    restrict: 'E',
-    controller: 'ArchiveController',
-    controllerAs: 'archiveCTRL',
+    restrict: 'A',
+    scope: { },
+    controller: require('./post.controller'),
+    controllerAs: 'postCTRL',
+    bindToController: true,
     template: require('./archive.template.html')
   };
 }

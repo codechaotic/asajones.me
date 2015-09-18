@@ -1,0 +1,7 @@
+This is the Post List
+
+<div ng-init="postCTRL.getAll()">
+  <div ng-repeat="post in postCTRL.posts">
+    <a href="/blog/view/{{post._id}}">{{post.title}}</a>
+  </div>
+</div>

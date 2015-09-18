@@ -1,8 +1,0 @@
-module.exports = angular.module( 'app.post', ['ngResource'])
-  .factory('Post', require('./post.factory'))
-  .directive('postView', require('./view.directive'))
-  .controller('EditController', require('./edit.controller'))
-  .directive('postEdit', require('./edit.directive'))
-  .directive('postSummary', require('./summary.directive'))
-  .controller('ArchiveController', require('./archive.controller'))
-  .directive('postArchive', require('./archive.directive'))
