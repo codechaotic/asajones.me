@@ -7,8 +7,8 @@ function postView() {
     scope: {
       id: '@postView'
     },
-    controller: require('./post.controller'),
-    controllerAs: 'postCTRL',
+    controller: require('./view.controller'),
+    controllerAs: 'View',
     bindToController: true,
     template: require('./view.template.html')
   };

@@ -1,1 +1,7 @@
-{{ postCTRL.id }}
+<h1>{{ View.post.title }}</h1>
+<main>{{ View.post.body }}</main>
+<ul>
+  <li ng-repeat="tag in View.post.tags">
+    {{ tag }}
+  </li>
+</ul>

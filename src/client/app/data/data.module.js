@@ -3,6 +3,6 @@ var DataModule = angular.module( 'app.data', [
 ]);
 
 DataModule
-  .factory('Post', require('./data/post.factory'));
+  .factory('Post', require('./post.factory'));
 
 module.exports = DataModule;

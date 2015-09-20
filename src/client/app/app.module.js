@@ -1,13 +1,14 @@
 require('./app.less');
 
 var AppModule = angular.module( 'app', [
-  require('./data.module').name,
-  require('./post.module').name,
-  require('./route.module').name
-] );
+  'ui.router',
+  require('./data/data.module').name,
+  require('./page/page.module').name,
+  require('./post/post.module').name,
+  require('./blog/blog.module').name
+]);
 
 AppModule
-  .config(require('./app.config'))
-  .controller('AppController', require('./app.controller'));
+  .config(require('./app.config'));
 
 module.exports = AppModule;
