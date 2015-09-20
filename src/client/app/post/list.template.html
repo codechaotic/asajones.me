@@ -1,3 +1,3 @@
 <div ng-repeat="post in List.list">
-  <a href="/blog/post/{{post._id}}">{{post.title}}</a>
+  <a ui-sref='site.blog.post({id: post._id})'>{{post.title}}</a>
 </div>
