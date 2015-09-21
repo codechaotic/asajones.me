@@ -4,7 +4,7 @@ PostCreateController.$inject = ['Post'];
 function PostCreateController(Post) {
   var vm = this;
 
-  init()
+  init();
 
   function init() {
     vm.post = {};
@@ -12,11 +12,11 @@ function PostCreateController(Post) {
 
   vm.save = function() {
     var post = vm.post;
-    
+
     post.tags = post.tags
       .split(',')
       .map(function(tag) {
-        return tag.trim()
+        return tag.trim();
       })
       .filter(function(tag,pos,arr) {
         return arr.indexOf(tag) == pos;

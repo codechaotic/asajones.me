@@ -1,11 +1,9 @@
-require('./app.less');
+require('./app.style.less');
 
 var AppModule = angular.module( 'app', [
   'ui.router',
   require('./data/data.module').name,
-  require('./page/page.module').name,
-  require('./post/post.module').name,
-  require('./blog/blog.module').name
+  require('./site/site.module').name
 ]);
 
 AppModule

@@ -6,15 +6,18 @@ BlogConfig.$inject = [
 
 function BlogConfig($stateProvider) {
   $stateProvider
-    .state('site.blog', {
+    .state('blog', {
+      abstract: true,
+      parent: 'site',
+      url: '/blog',
       template: require('./blog.template.html')
     })
-    .state('site.blog.summary', {
-      url: "/blog",
+    .state('blog.summary', {
+      url: "/",
       template: require('./summary.template.html')
     })
-    .state('site.blog.post', {
-      url: "/blog/post/:id",
+    .state('blog.post', {
+      url: "/post/:id",
       controller: require('./single.controller'),
       controllerAs: 'ctrl',
       template: require('./single.template.html')

@@ -5,5 +5,5 @@ RoutePostSingleController.$inject = [
 ];
 
 function RoutePostSingleController($stateParams) {
-  this.params = $stateParams
+  this.id = $stateParams.id;
 }
