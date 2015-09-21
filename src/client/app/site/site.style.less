@@ -1,14 +1,19 @@
-.content {
-  margin-left: 25%;
+@media screen and (min-width: 48em) {
+  .content {
+    margin-left: 25%;
+    float: none;
+  }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+  }
 }
 
 .sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
   background-color: #dddddd;
 }
 
-.sidebar nav > ul {
-  list-style-type: none;
+.sidebar nav > ul > li {
+  float: left;
 }
