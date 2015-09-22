@@ -13,11 +13,11 @@ function BlogConfig($stateProvider) {
       template: require('./blog.template.html')
     })
     .state('blog.summary', {
-      url: "/",
+      url: '/',
       template: require('./summary.template.html')
     })
     .state('blog.post', {
-      url: "/post/:id",
+      url: '/post/:id',
       controller: require('./single.controller'),
       controllerAs: 'ctrl',
       template: require('./single.template.html')
